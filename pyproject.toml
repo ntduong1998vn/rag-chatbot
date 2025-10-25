@@ -6,4 +6,15 @@ readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "fastapi[standard]>=0.120.0",
+    "uvicorn[standard]>=0.24.0",
+    "pydantic>=2.0.0",
+    "qdrant-client>=1.7.0",
+    "sentence-transformers>=2.2.0",
+    "unstructured[all-docs]",
+    "python-multipart",
+    "flagembedding",
+    "google-genai>=1.46.0",
+    "huggingface-hub[hf-xet]>=0.36.0",
+    "pypdf>=3.0.0",
+    "python-dotenv>=1.0.0",
 ]
