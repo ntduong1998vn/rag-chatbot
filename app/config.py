@@ -12,12 +12,17 @@ load_dotenv()
 class LLMConfig:
     """Configuration for Language Model"""
 
+    provider_type: str = "gemini"  # gemini, openai, etc.
     model: str = "gemini-2.5-flash-lite"
     api_key: Optional[str] = None
     max_tokens: int = 700
     temperature: float = 0.3
 
     def __post_init__(self):
+        env_provider = os.getenv("LLM_PROVIDER")
+        if env_provider:
+            self.provider_type = env_provider.lower()
+
         if self.api_key is None:
             self.api_key = os.getenv("GEMINI_API_KEY")
 
@@ -26,12 +31,18 @@ class LLMConfig:
 class EmbeddingConfig:
     """Configuration for Embedding Model"""
 
+    provider_type: str = "bge"  # bge, voyage
     model_name: str = "BAAI/bge-m3"
     device: Optional[str] = None
     dimensions: int = 1024  # bge-m3 default dimension
+    voyage_api_key: Optional[str] = None
 
     def __post_init__(self):
         # Allow override from environment
+        env_provider = os.getenv("EMBEDDING_PROVIDER")
+        if env_provider:
+            self.provider_type = env_provider.lower()
+
         env_model = os.getenv("EMBEDDING_MODEL")
         if env_model:
             self.model_name = env_model
@@ -40,11 +51,16 @@ class EmbeddingConfig:
         if env_device:
             self.device = env_device
 
+        env_voyage_key = os.getenv("VOYAGE_API_KEY")
+        if env_voyage_key:
+            self.voyage_api_key = env_voyage_key
+
 
 @dataclass
 class VectorDBConfig:
-    """Configuration for Vector Database (Qdrant)"""
+    """Configuration for Vector Database"""
 
+    provider_type: str = "qdrant"  # qdrant, pinecone, etc.
     host: str = "localhost"
     port: int = 6333
     collection_name: str = "jp_docs_semantic"
@@ -52,6 +68,10 @@ class VectorDBConfig:
 
     def __post_init__(self):
         # Allow override from environment
+        env_provider = os.getenv("DATABASE_PROVIDER")
+        if env_provider:
+            self.provider_type = env_provider.lower()
+
         env_host = os.getenv("QDRANT_HOST")
         if env_host:
             self.host = env_host
@@ -73,10 +93,15 @@ class VectorDBConfig:
 class RerankerConfig:
     """Configuration for Reranker"""
 
+    provider_type: str = "flag"  # flag, voyage, etc.
     model_name: Optional[str] = None  # Set to "BAAI/bge-reranker-v2-m3" to enable
     device: Optional[str] = None
 
     def __post_init__(self):
+        env_provider = os.getenv("RERANKER_PROVIDER")
+        if env_provider:
+            self.provider_type = env_provider.lower()
+
         env_model = os.getenv("RERANKER_MODEL")
         if env_model:
             self.model_name = env_model
